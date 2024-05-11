@@ -30,7 +30,7 @@ steps:
   inputs:
     containerregistrytype: 'Azure Container Registry'
     azureSubscription: 'ARM'
-    azureContainerRegistry: 'dockerreg0912.azurecr.io'
+    azureContainerRegistry: 'udayacr8106.azurecr.io'
     dockerComposeFile: 'docker-compose.ci.build.yml'
     action: 'Run services'
     detached: false
@@ -40,7 +40,7 @@ steps:
   inputs:
     containerregistrytype: 'Azure Container Registry'
     azureSubscription: 'ARM'
-    azureContainerRegistry: 'dockerreg0912.azurecr.io'
+    azureContainerRegistry: 'udayacr8106.azurecr.io'
     dockerComposeFile: 'docker-compose.yml'
     dockerComposeFileArgs: 'DOCKER_BUILD_SOURCE='
     action: 'Build services'
@@ -51,7 +51,7 @@ steps:
   inputs:
     containerregistrytype: 'Azure Container Registry'
     azureSubscription: 'ARM'
-    azureContainerRegistry: 'dockerreg0912.azurecr.io'
+    azureContainerRegistry: 'udayacr8106.azurecr.io'
     dockerComposeFile: 'docker-compose.yml'
     dockerComposeFileArgs: 'DOCKER_BUILD_SOURCE='
     action: 'Push services'
@@ -62,7 +62,7 @@ steps:
   inputs:
     containerregistrytype: 'Azure Container Registry'
     azureSubscription: 'ARM'
-    azureContainerRegistry: 'dockerreg0912.azurecr.io'
+    azureContainerRegistry: 'udayacr8106.azurecr.io'
     dockerComposeFile: 'docker-compose.yml'
     dockerComposeFileArgs: 'DOCKER_BUILD_SOURCE='
     action: 'Lock services'
