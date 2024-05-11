@@ -10,14 +10,14 @@ pool:
   vmImage: ubuntu-latest
 
 steps:
-- task: replacetokens@4
+- task: replacetokens@5
   displayName: 'Replace tokens in appsettings.json'
   inputs:
     rootDirectory: '$(build.sourcesdirectory)/src/MyHealth.Web'
     targetFiles: appsettings.json
     escapeType: none
 
-- task: replacetokens@3
+- task: replacetokens@5
   displayName: 'Replace tokens in mhc-aks.yaml'
   inputs:
     targetFiles: 'mhc-aks.yaml'
