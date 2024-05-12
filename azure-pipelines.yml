@@ -95,7 +95,7 @@ stages:
           displayName: DB Deployment
           environment: 'development'
           pool:
-            vmImage: 'ubuntu-latest'
+            vmImage: 'windows-2019'
           strategy:
            runOnce:
              deploy:
