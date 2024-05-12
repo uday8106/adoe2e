@@ -35,7 +35,7 @@ stages:
                 inputs:
                   containerregistrytype: 'Azure Container Registry'
                   azureSubscription: 'udaysc'
-                  azureContainerRegistry: 'udayacr8106.azurecr.io'
+                  azureContainerRegistry: 'udayacr810.azurecr.io'
                   dockerComposeFile: 'docker-compose.ci.build.yml'
                   action: 'Run services'
                   detached: false
@@ -45,7 +45,7 @@ stages:
                 inputs:
                   containerregistrytype: 'Azure Container Registry'
                   azureSubscription: 'udaysc'
-                  azureContainerRegistry: 'udayacr8106.azurecr.io'
+                  azureContainerRegistry: 'udayacr810.azurecr.io'
                   dockerComposeFile: 'docker-compose.yml'
                   dockerComposeFileArgs: 'DOCKER_BUILD_SOURCE='
                   action: 'Build services'
@@ -56,7 +56,7 @@ stages:
                 inputs:
                   containerregistrytype: 'Azure Container Registry'
                   azureSubscription: 'udaysc'
-                  azureContainerRegistry: 'udayacr8106.azurecr.io'
+                  azureContainerRegistry: 'udayacr810.azurecr.io'
                   dockerComposeFile: 'docker-compose.yml'
                   dockerComposeFileArgs: 'DOCKER_BUILD_SOURCE='
                   action: 'Push services'
@@ -67,7 +67,7 @@ stages:
                 inputs:
                   containerregistrytype: 'Azure Container Registry'
                   azureSubscription: 'udaysc'
-                  azureContainerRegistry: 'udayacr8106.azurecr.io'
+                  azureContainerRegistry: 'udayacr810.azurecr.io'
                   dockerComposeFile: 'docker-compose.yml'
                   dockerComposeFileArgs: 'DOCKER_BUILD_SOURCE='
                   action: 'Lock services'
@@ -135,7 +135,7 @@ stages:
                    secretType: 'dockerRegistry'
                    containerRegistryType: 'Azure Container Registry'
                    azureSubscriptionEndpointForSecrets: 'udaysc'
-                   azureContainerRegistry: '$(ACR)'
+                   azureContainerRegistry: 'udayacr810.azurecr.io'
                    secretName: 'mysecretkey'
                    versionSpec: '1.8.1'
                    checkLatest: true
@@ -148,11 +148,11 @@ stages:
                    azureResourceGroup: 'UDAY-RG'
                    kubernetesCluster: 'NextOpsAKS01'
                    command: 'set'
-                   arguments: 'image deployments/mhc-front $(ACR)/myhealth.web'
+                   arguments: 'image deployments/mhc-front mhc-front-$(ACR)/myhealth.web:$(Build.BuildId)'
                    secretType: 'dockerRegistry'
                    containerRegistryType: 'Azure Container Registry'
                    azureSubscriptionEndpointForSecrets: 'udaysc'
-                   azureContainerRegistry: '$(ACR)'
+                   azureContainerRegistry: 'udayacr810.azurecr.io'
                    secretName: 'mysecretkey'
                    versionSpec: '1.8.1'
                    checkLatest: true
