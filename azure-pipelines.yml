@@ -148,7 +148,7 @@ stages:
                    azureResourceGroup: 'UDAY-RG'
                    kubernetesCluster: 'NextOpsAKS01'
                    command: 'set'
-                   arguments: 'image deployments/mhc-front mhc-front-$(ACR)/myhealth.web:$(Build.BuildId)'
+                   arguments: 'image deployments/mhc-front mhc-front-$(ACR)/myhealth.web'
                    secretType: 'dockerRegistry'
                    containerRegistryType: 'Azure Container Registry'
                    azureSubscriptionEndpointForSecrets: 'udaysc'
