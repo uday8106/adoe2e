@@ -91,7 +91,7 @@ stages:
       dependsOn: Build
       condition: succeeded('Build')      
       jobs:
-        - deployment: DB Deployment
+        - deployment: DB
           displayName: DB Deployment
           environment: 'development'
           pool:
@@ -113,7 +113,7 @@ stages:
                   DacpacFile: '$(Agent.BuildDirectory)/**/*.dacpac'
                   IpDetectionMethod: 'AutoDetect'
 
-        - deployment: AKS Deployment
+        - deployment: AKS
           displayName: AKS Deployment
           environment: 'development'
           pool:
