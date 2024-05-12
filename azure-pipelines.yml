@@ -86,3 +86,77 @@ stages:
                 displayName: 'Publish Artifact'
                 inputs:
                   ArtifactName: deploy
+    - stage: Deploy
+      displayName: Deploy Stage
+      dependsOn: Build
+      condition: succeeded('Build')      
+      jobs:
+        - deployment: DB Deployment
+          displayName: DB Deployment
+          environment: 'development'
+          pool:
+            vmImage: 'ubuntu-latest'
+          strategy:
+           runOnce:
+             deploy:
+               steps:
+               - task: SqlAzureDacpacDeployment@1
+                 inputs:
+                  azureSubscription: 'udaysc'
+                  AuthenticationType: 'server'
+                  ServerName: '$(SQLServer)'
+                  DatabaseName: '$(DatabaseName)'
+                  SqlUsername: '$(SQLuser)'
+                  SqlPassword: '$(SQLpassword)'
+                  deployType: 'DacpacTask'
+                  DeploymentAction: 'Publish'
+                  DacpacFile: '$(Agent.BuildDirectory)/**/*.dacpac'
+                  IpDetectionMethod: 'AutoDetect'
+
+        - deployment: AKS Deployment
+          displayName: AKS Deployment
+          environment: 'development'
+          pool:
+            vmImage: 'ubuntu-latest'
+          strategy:
+           runOnce:
+             deploy:
+               steps:
+               - task: Kubernetes@1
+                 displayName: 'Create Deployments & Services in AKS'
+                 inputs:
+                   connectionType: 'Azure Resource Manager'
+                   azureSubscriptionEndpoint: 'udaysc'
+                   azureResourceGroup: 'UDAY-RG'
+                   kubernetesCluster: 'NextOpsAKS01'
+                   command: 'apply'
+                   useConfigurationFile: true
+                   configuration: '$(Agent.BuildDirectory)/deploy/mhc-aks.yaml'
+                   secretType: 'dockerRegistry'
+                   containerRegistryType: 'Azure Container Registry'
+                   azureSubscriptionEndpointForSecrets: 'serviceconnection01'
+                   azureContainerRegistry: '$(ACR)'
+                   secretName: 'mysecretkey'
+                   versionSpec: '1.8.1'
+                   checkLatest: true
+
+               - task: Kubernetes@1
+                 displayName: 'Update image in AKS'
+                 inputs:
+                   connectionType: 'Azure Resource Manager'
+                   azureSubscriptionEndpoint: 'udaysc'
+                   azureResourceGroup: 'UDAY-RG'
+                   kubernetesCluster: 'NextOpsAKS01'
+                   command: 'set'
+                   arguments: 'image deployments/mhc-front mhc-front-$(ACR)/myhealth.web:$(Build.BuildId)'
+                   secretType: 'dockerRegistry'
+                   containerRegistryType: 'Azure Container Registry'
+                   azureSubscriptionEndpointForSecrets: 'serviceconnection@1'
+                   azureContainerRegistry: '$(ACR)'
+                   secretName: 'mysecretkey'
+                   versionSpec: '1.8.1'
+                   checkLatest: true
+                  
+  
+
+
