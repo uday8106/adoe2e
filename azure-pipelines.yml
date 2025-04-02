@@ -29,43 +29,21 @@ stages:
                   escapeType: none
                   tokenPrefix: '__'
                   tokenSuffix: '__'
-
-
-# Docker Compose v0
-# Build, push or run multi-container Docker applications. Task can be used with Docker or Azure Container registry.
-              - task: DockerCompose@0
-                displayName: 'compose'
+              - task: DockerCompose@1
                 inputs:
-                  containerregistrytype: 'Azure Container Registry'  
+                  containerregistrytype: 'Azure Container Registry'
+                  azureSubscription: 'Azure subscription 1 (8e5493a7-1eae-4169-adfd-8ec3bb80365a)'
+                  azureContainerRegistry: '{"loginServer":"acr810.azurecr.io", "id" : "/subscriptions/8e5493a7-1eae-4169-adfd-8ec3bb80365a/resourceGroups/testvm/providers/Microsoft.ContainerRegistry/registries/acr810"}'
                   dockerComposeFile: '**/docker-compose.yml'
-                  action: 'Run a Docker Compose command' 
-   
-    
-              
-
-             
-
-              - task: DockerCompose@0
-                displayName: 'Push services'
+                  action: 'Run a Docker Compose command'
+        
+              - task: DockerCompose@1
                 inputs:
                   containerregistrytype: 'Azure Container Registry'
-                  azureSubscription: 'udaysc'
-                  azureContainerRegistry: 'udayacr810.azurecr.io'
-                  dockerComposeFile: 'docker-compose.yml'
-                  dockerComposeFileArgs: 'DOCKER_BUILD_SOURCE='
+                  azureSubscription: 'Azure subscription 1 (8e5493a7-1eae-4169-adfd-8ec3bb80365a)'
+                  azureContainerRegistry: '{"loginServer":"acr810.azurecr.io", "id" : "/subscriptions/8e5493a7-1eae-4169-adfd-8ec3bb80365a/resourceGroups/testvm/providers/Microsoft.ContainerRegistry/registries/acr810"}'
+                  dockerComposeFile: '**/docker-compose.yml'
                   action: 'Push services'
-                  additionalImageTags: '$(Build.BuildId)'
-
-              - task: DockerCompose@0
-                displayName: 'Lock services'
-                inputs:
-                  containerregistrytype: 'Azure Container Registry'
-                  azureSubscription: 'udaysc'
-                  azureContainerRegistry: 'udayacr810.azurecr.io'
-                  dockerComposeFile: 'docker-compose.yml'
-                  dockerComposeFileArgs: 'DOCKER_BUILD_SOURCE='
-                  action: 'Lock services'
-                  outputDockerComposeFile: '$(Build.StagingDirectory)/docker-compose.yml'
 
               - task: CopyFiles@2
                 displayName: 'Copy Files'
@@ -80,77 +58,7 @@ stages:
                 displayName: 'Publish Artifact'
                 inputs:
                   ArtifactName: deploy
-    - stage: Deploy
-      displayName: Deploy Stage
-      dependsOn: Build
-      condition: succeeded('Build')      
-      jobs:
-        - deployment: DB
-          displayName: DB Deployment
-          environment: 'development'
-          pool:
-            vmImage: 'windows-2019'
-          strategy:
-           runOnce:
-             deploy:
-               steps:
-               - task: SqlAzureDacpacDeployment@1
-                 inputs:
-                  azureSubscription: 'udaysc'
-                  AuthenticationType: 'server'
-                  ServerName: '$(SQLServer)'
-                  DatabaseName: '$(DatabaseName)'
-                  SqlUsername: '$(SQLuser)'
-                  SqlPassword: '$(SQLpassword)'
-                  deployType: 'DacpacTask'
-                  DeploymentAction: 'Publish'
-                  DacpacFile: '$(Agent.BuildDirectory)/**/*.dacpac'
-                  IpDetectionMethod: 'AutoDetect'
-
-        - deployment: AKS
-          displayName: AKS Deployment
-          environment: 'development'
-          pool:
-            vmImage: 'ubuntu-latest'
-          strategy:
-           runOnce:
-             deploy:
-               steps:
-               - task: Kubernetes@1
-                 displayName: 'Create Deployments & Services in AKS'
-                 inputs:
-                   connectionType: 'Azure Resource Manager'
-                   azureSubscriptionEndpoint: 'udaysc'
-                   azureResourceGroup: 'UDAY-RG'
-                   kubernetesCluster: 'NextOpsAKS01'
-                   command: 'apply'
-                   useConfigurationFile: true
-                   configuration: '$(Agent.BuildDirectory)/deploy/mhc-aks.yaml'
-                   secretType: 'dockerRegistry'
-                   containerRegistryType: 'Azure Container Registry'
-                   azureSubscriptionEndpointForSecrets: 'udaysc'
-                   azureContainerRegistry: 'udayacr810.azurecr.io'
-                   secretName: 'mysecretkey'
-                   versionSpec: '1.8.1'
-                   checkLatest: true
-
-               - task: Kubernetes@1
-                 displayName: 'Update image in AKS'
-                 inputs:
-                   connectionType: 'Azure Resource Manager'
-                   azureSubscriptionEndpoint: 'udaysc'
-                   azureResourceGroup: 'UDAY-RG'
-                   kubernetesCluster: 'NextOpsAKS01'
-                   command: 'set'
-                   arguments: 'image deployments/mhc-front mhc-front-$(ACR)/myhealth.web:$(Build.BuildId)'
-                   secretType: 'dockerRegistry'
-                   containerRegistryType: 'Azure Container Registry'
-                   azureSubscriptionEndpointForSecrets: 'udaysc'
-                   azureContainerRegistry: 'udayacr810.azurecr.io'
-                   secretName: 'mysecretkey'
-                   versionSpec: '1.8.1'
-                   checkLatest: true
-                  
+ 
   
 
 
