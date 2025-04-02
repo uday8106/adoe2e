@@ -30,26 +30,20 @@ stages:
                   tokenPrefix: '__'
                   tokenSuffix: '__'
 
-              - task: DockerCompose@0
-                displayName: 'Run services'
-                inputs:
-                  containerregistrytype: 'Azure Container Registry'
-                  azureSubscription: 'udaysc'
-                  azureContainerRegistry: 'udayacr810.azurecr.io'
-                  dockerComposeFile: 'docker-compose.ci.build.yml'
-                  action: 'Run services'
-                  detached: false
 
+# Docker Compose v0
+# Build, push or run multi-container Docker applications. Task can be used with Docker or Azure Container registry.
               - task: DockerCompose@0
-                displayName: 'Build services'
+                displayName: 'compose'
                 inputs:
-                  containerregistrytype: 'Azure Container Registry'
-                  azureSubscription: 'udaysc'
-                  azureContainerRegistry: 'udayacr810.azurecr.io'
-                  dockerComposeFile: 'docker-compose.yml'
-                  dockerComposeFileArgs: 'DOCKER_BUILD_SOURCE='
-                  action: 'Build services'
-                  additionalImageTags: '$(Build.BuildId)'
+                  containerregistrytype: 'Azure Container Registry'  
+                  dockerComposeFile: '**/docker-compose.yml'
+                  action: 'Run a Docker Compose command' 
+   
+    
+              
+
+             
 
               - task: DockerCompose@0
                 displayName: 'Push services'
