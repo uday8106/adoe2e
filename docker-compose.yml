@@ -1,8 +1,6 @@
-version : "5"
-
 services:
   myhealth.web:
-    image: myhealth.web
+    image: $(DOCKER_REGISTRY)/myhealth.web:$(DOCKER_IMAGE_TAG)
     build:
       context: ./src/MyHealth.Web
       dockerfile: Dockerfile
